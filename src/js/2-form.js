@@ -7,8 +7,9 @@ const messageInput = document.querySelector(
   'form.feedback-form textarea[name="message"]'
 );
 
-const submit = document.querySelector('form button[type="submit"]');
-submit.addEventListener('click', function (e) {
+const contactForm = document.querySelector('form.feedback-form');
+
+contactForm.addEventListener('submit', function (e) {
   e.preventDefault();
   console.log(JSON.parse(getFormState()));
   resetFormState();
@@ -48,19 +49,21 @@ function saveEmail(event) {
   localStorage.setItem(
     'feedback-form-state',
     JSON.stringify({
-      email: event.target.value,
+      email: event.target.value.trim(),
       message: form.message,
     })
   );
 }
 
-messageInput.addEventListener('input', function (event) {
+messageInput.addEventListener('input', saveMessage);
+
+function saveMessage(event) {
   const form = JSON.parse(getFormState());
   localStorage.setItem(
     'feedback-form-state',
     JSON.stringify({
-      message: event.target.value,
+      message: event.target.value.trim(),
       email: form.email,
     })
   );
-});
+}
