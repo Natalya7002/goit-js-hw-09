@@ -10,17 +10,26 @@ const contactForm = document.querySelector('form.feedback-form');
 
 contactForm.addEventListener('submit', function (e) {
   e.preventDefault();
-  console.log(JSON.parse(getFormState()));
-  resetFormState();
-  emailInput.value = '';
-  messageInput.value = '';
+  const data = JSON.parse(getFormState());
+
+  if (data.email === '' || data.message === '') {
+    alert('Please fill in all the fields!');
+    return;
+  } else {
+    alert(
+      `Thank you for your feedback! Email: ${data.email}, Message: ${data.message}`
+    );
+    initFormState();
+    emailInput.value = '';
+    messageInput.value = '';
+  }
 });
 
 function getFormState() {
   return localStorage.getItem('feedback-form-state');
 }
 
-function resetFormState() {
+function initFormState() {
   localStorage.setItem(
     'feedback-form-state',
     JSON.stringify({
@@ -33,35 +42,39 @@ function resetFormState() {
 const form = getFormState();
 
 if (form == null) {
-  resetFormState();
+  initFormState();
 } else {
   let formstate = JSON.parse(form);
   emailInput.value = formstate.email;
   messageInput.value = formstate.message;
 }
 
-emailInput.addEventListener('input', saveEmail);
+contactForm.addEventListener('input', e => {
+  if (e.target.name === 'email') {
+    saveEmail(e.target.value);
+  } else if (e.target.name === 'message') {
+    saveMessage(e.target.value);
+  }
+});
 
-function saveEmail(event) {
+function saveEmail(value) {
   const form = JSON.parse(getFormState());
 
   localStorage.setItem(
     'feedback-form-state',
     JSON.stringify({
-      email: event.target.value.trim(),
+      email: value,
       message: form.message,
     })
   );
 }
 
-messageInput.addEventListener('input', saveMessage);
-
-function saveMessage(event) {
+function saveMessage(value) {
   const form = JSON.parse(getFormState());
   localStorage.setItem(
     'feedback-form-state',
     JSON.stringify({
-      message: event.target.value.trim(),
+      message: value,
       email: form.email,
     })
   );
