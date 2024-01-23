@@ -19,6 +19,7 @@ contactForm.addEventListener('submit', function (e) {
     alert(
       `Thank you for your feedback! Email: ${data.email}, Message: ${data.message}`
     );
+    console.log(data);
     initFormState();
     emailInput.value = '';
     messageInput.value = '';
